@@ -1,0 +1,23 @@
+---
+title: "Spokane Foreign Born"
+author: "Gonzalo Del Carpio & Daniel Bies"
+date: "11/9/2017"
+output: html_document
+---
+
+```{r}
+spokaneindustries <-data.frame("industry"=rownames(spokaneindustries), spokaneindustries)
+data <- spokaneindustries[,c('Industry', 'Total')]
+
+```
+
+
+
+```{r}
+p <- plot_ly(spokaneindustries, labels = ~industry, values = ~1, type = 'pie') %>%
+  layout(title = 'Spokane Industries',
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+```
+

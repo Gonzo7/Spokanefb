@@ -1,0 +1,225 @@
+---
+title: "HTML Widgets"
+author: "Daniel Bies and Gonzalo Del Carpio"
+date: "November 7, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(htmlwidgets)
+library(readxl)
+library(googleVis)
+library(plotly)
+library(parcoords)
+```
+## Demographics 
+#### This graph shows the age distribution of Spokane as a factor of origin of birth. From the data, it can be gathered that the foreign born population is older than the native population. This makes sense, because it takes a while for some foreign born people to immigrate into the USA. 
+```{r fig1,fig.height=6,fig.width=23}
+
+
+y <- c('Total Population',
+       'Native Estimate',
+       'Foreign Born Naturalized Citizen',
+       'Foreign Born, Not Citizen')
+x1 <- c(6.2, 6.5, 0.0, 1.4)
+x2 <-c(16.4, 17.0, 7.3, 7.2)
+x3 <- c(10.7, 10.7, 7.7, 15.5)
+x4 <- c(26.0, 25.4, 30.9, 43.1)
+x5 <- c(13.3, 13.2, 15.0, 14.1)
+x6 <- c(13.1, 13.1, 17.2, 9.2)
+x7 <- c(8.1, 8.1, 11.3, 5.9)
+x8 <- c(4.2, 4.2, 6.7, 3.1)
+x9 <- c(1.9, 1.9, 3.7, 0.6)
+
+distdata <- data.frame(y, x1, x2, x3, x4, x5, x6, x7, x8, x9)
+
+top_labels <- c('Younger than<br>5yrs', '5 to 17yrs', '18 to 24yrs', '25 to 44yrs', '45 to 54yrs', '55 to 64yrs', '65 to 74yrs', '75 to 84yrs', '85+ yrs')
+
+p2 <- plot_ly(distdata, x = ~x1, y = ~y, type = 'bar', orientation = 'h',
+        marker = list(color = 'rgba(38, 24, 74, 0.8)',
+                      line = list(color = 'rgb(248, 248, 249)', width = 1))) %>%
+  add_trace(x = ~x2, marker = list(color = 'rgba(71, 58, 131, 0.8)')) %>%
+  add_trace(x = ~x3, marker = list(color = 'rgba(122, 120, 168, 0.8)')) %>%
+  add_trace(x = ~x4, marker = list(color = 'rgba(164, 163, 204, 0.85)')) %>%
+  add_trace(x = ~x5, marker = list(color = 'rgba(190, 192, 213, 1)')) %>%
+  add_trace(x = ~x6, marker = list(color = 'rgba(190, 192, 213, 1)')) %>%
+  add_trace(x = ~x7, marker = list(color = 'rgba(190, 192, 213, 1)')) %>%
+  add_trace(x = ~x8, marker = list(color = 'rgba(190, 192, 213, 1)')) %>%
+  add_trace(x = ~x9, marker = list(color = 'rgba(190, 192, 213, 1)')) %>%
+  layout(xaxis = list(title = "",
+                      showgrid = FALSE,
+                      showline = FALSE,
+                      showticklabels = FALSE,
+                      zeroline = FALSE,
+                      domain = c(0.15, 1)),
+         yaxis = list(title = "",
+                      showgrid = FALSE,
+                      showline = FALSE,
+                      showticklabels = FALSE,
+                      zeroline = FALSE),
+         barmode = 'stack',
+         paper_bgcolor = 'rgb(248, 248, 255)', plot_bgcolor = 'rgb(248, 248, 255)',
+         margin = list(l = 120, r = 10, t = 140, b = 80),
+         showlegend = FALSE) %>%
+  # labeling the y-axis
+  add_annotations(xref = 'paper', yref = 'y', x = 0.14, y = y,
+                  xanchor = 'right',
+                  text = y,
+                  font = list(family = 'Arial', size = 12,
+                            color = 'rgb(67, 67, 67)'),
+                  showarrow = FALSE, align = 'right') %>%
+  # labeling the percentages of each bar (x_axis)
+  add_annotations(xref = 'x', yref = 'y',
+                  x = x1 / 2, y = y,
+                  text = paste(distdata[,"x1"], '%'),
+                  font = list(family = 'Arial', size = 12,
+                            color = 'rgb(248, 248, 255)'),
+                  showarrow = FALSE) %>%
+  add_annotations(xref = 'x', yref = 'y',
+                  x = x1 + x2 / 2, y = y,
+                  text = paste(distdata[,"x2"], '%'),
+                  font = list(family = 'Arial', size = 12,
+                              color = 'rgb(248, 248, 255)'),
+                  showarrow = FALSE) %>%
+  add_annotations(xref = 'x', yref = 'y',
+                  x = x1 + x2 + x3 / 2, y = y,
+                  text = paste(distdata[,"x3"], '%'),
+                  font = list(family = 'Arial', size = 12,
+                              color = 'rgb(248, 248, 255)'),
+                  showarrow = FALSE) %>%
+  add_annotations(xref = 'x', yref = 'y',
+                  x = x1 + x2 + x3 + x4 / 2, y = y,
+                  text = paste(distdata[,"x4"], '%'),
+                  font = list(family = 'Arial', size = 12,
+                              color = 'rgb(248, 248, 255)'),
+                  showarrow = FALSE) %>%
+  add_annotations(xref = 'x', yref = 'y',
+                  x = x1 + x2 + x3 + x4 + x5 / 2, y = y,
+                  text = paste(distdata[,"x5"], '%'),
+                  font = list(family = 'Arial', size = 12,
+                              color = 'rgb(248, 248, 255)'),
+                  showarrow = FALSE) %>%
+    add_annotations(xref = 'x', yref = 'y',
+                  x = x1 + x2 + x3 + x4 + x5 + x6/ 2, y = y,
+                  text = paste(distdata[,"x6"], '%'),
+                  font = list(family = 'Arial', size = 12,
+                              color = 'rgb(248, 248, 255)'),
+                  showarrow = FALSE) %>%
+    add_annotations(xref = 'x', yref = 'y',
+                  x = x1 + x2 + x3 + x4 + x5 + x6 + x7 / 2, y = y,
+                  text = paste(distdata[,"x7"], '%'),
+                  font = list(family = 'Arial', size = 12,
+                              color = 'rgb(248, 248, 255)'),
+                  showarrow = FALSE) %>%
+    add_annotations(xref = 'x', yref = 'y',
+                  x = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 / 2, y = y,
+                  text = paste(distdata[,"x8"], '%'),
+                  font = list(family = 'Arial', size = 12,
+                              color = 'rgb(248, 248, 255)'),
+                  showarrow = FALSE) %>%
+    add_annotations(xref = 'x', yref = 'y',
+                  x = x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 / 2, y = y,
+                  text = paste(distdata[,"x9"], '%'),
+                  font = list(family = 'Arial', size = 12,
+                              color = 'rgb(248, 248, 255)'),
+                  showarrow = FALSE) %>%
+  # labeling the first Likert scale (on the top)
+  add_annotations(xref = 'x', yref = 'paper',
+                  x = c(6.2 / 2, 6.2 + 16.4 / 2, 6.2 + 16.4 + 10.7 / 2, 6.2 + 16.4 + 10.7 + 26 / 2,
+                       6.2 + 16.4 + 10.7 + 26 + 13.3 / 2, 6.2 + 16.4 + 10.7 + 26 + 13.3 + 13.1 /2, 6.2 + 16.4 + 10.7 + 26 + 13.3 + 13.1 + 8.1 /2, 6.2 + 16.4 + 10.7 + 26 + 13.3 + 13.1 + 8.1 + 4.2 /2, 6.2 + 16.4 + 10.7 + 26 + 13.3 + 13.1 + 8.1 + 4.2 + 1.9 /2 ),
+                  y = 1.15,
+                  text = top_labels,
+                  font = list(family = 'Arial', size = 12,
+                              color = 'rgb(67, 67, 67)'),
+                  showarrow = FALSE)
+p2
+```
+
+#### This graph shows the total population size of each type of person studied in this data. As expected, the native born population heavily outweighs the foreign born population. 
+
+```{r results= 'asis'}
+library(readxl)
+spokanepopulation <- read_excel("~/Desktop/Data Visualization/Spokanefb/spokanepopulation.xlsx")
+Popcolumn=gvisColumnChart(spokanepopulation)
+plot(Popcolumn)
+```
+
+#### This graph shows the median age for each type of person studied in this dataset. The oldest population is the foreign born naturalized citizens. This can be explained by the amount of time that it takes to get citizenship after immigrating to the US, so those that are naturalized citizens must have been in the United States for many years, thus making them older. 
+
+```{r results= 'asis'}
+library(readxl)
+spokanemedianage <- read_excel("~/Desktop/Data Visualization/Spokanefb/spokanemedianage.xlsx")
+Agecolumn=gvisColumnChart(spokanemedianage)
+plot(Agecolumn)
+```
+
+##Gender
+#### This graph shows the gender breakdown for the four subsets of people studied in this dataset. Across the board, there were more females than males in the Spokane area, with a large percent more female immigrants than male immigrants. 
+
+```{r}
+Type <- c("Spokane.Total", "Native", "Foreign.Born.Naturalized.Citizen", "Foreign.Born.Not.Citizen")
+Male <- c(0.495, 0.499, 0.411, 0.482)
+Female <- c(0.505, 0.501, 0.589, 0.518)
+genderdata <- data.frame(Type, Male, Female)
+
+p <- plot_ly(genderdata, x = ~Type, y = ~Male, type = 'bar', name = 'Male') %>%
+  add_trace(y = ~Female, name = 'Female') %>%
+  layout(yaxis = list(title = 'Percentage'), barmode = 'group')
+p
+
+```
+
+## Housing
+#### This graph shows the housing breakdown for the four subsets of people studied in this dataset. In this data, three out of the four groups had a heavy preference for owning a house, except for the foreign born non-US citizens. This group of people were much more likely to rent, which indicates that they either have trouble buying a house, or have not been in Spokane long enough to purchase one. 
+ 
+```{r}
+Housing.Type <- c("Spokane.Total", "Native", "Foreign.Born.Naturalized.Citizen", "Foreign.Born.Not.Citizen")
+Owner.Occupied <- c(0.629, 0.633, 0.705, 0.372)
+Renter.Occupied <- c(0.371, 0.367, 0.295, 0.628)
+housingdata <- data.frame(Housing.Type, Owner.Occupied, Renter.Occupied)
+
+phouse <- plot_ly(housingdata, x = ~Housing.Type, y = ~Owner.Occupied, type = 'bar', name = 'Owner Occupied') %>%
+  add_trace(y = ~Renter.Occupied, name = 'Renter Occupied') %>%
+  layout(yaxis = list(title = 'Percentage'), barmode = 'group')
+phouse
+```
+
+
+## Earnings
+#### This graph shows the earnings in the Spokane area as a factor of birth origin. In this graph you can see that a higher percentage of native born people are present as the earnings go up. This suggests that native born people are being paid more than foreign born people. 
+
+```{r fig2, fig.height=8, fig.width=10}
+library(readxl)
+spokaneearnings2 <- read_excel("~/Desktop/Data Visualization/Spokanefb/spokaneearnings2.xlsx")
+Earnings=ggplot(spokaneearnings2,aes(x=Last.Year.Earnings,y=Percentage,color=Origin))+geom_point() + labs(list(title = "Spokane Earnings", x = "Earnings Level", y = "Percentage", width=600)) 
+Earnings
+```
+
+
+```{r}
+spokaneindustries <- read_excel("~/Desktop/Data Visualization/Spokanefb/spokaneindustries.xlsx")
+```
+
+
+```{r fig3, fig.height=6,fig.width=10}
+Industriesgraph = parcoords(data= spokaneindustries, rownames =F,
+     reorderable = T
+    , queue = T
+    , color = list( colorBy = "Industry"
+      ,colorScale = htmlwidgets::JS("d3.scale.category10()")
+    )    
+  , brushMode = "1D-axes-multi" )
+
+Industriesgraph
+
+saveWidget(Industriesgraph,file = "Spokaneindustries.html", selfcontained = TRUE)
+```
+
+###### From this we can see that there are differences between the industries that foreign born people who are not citizens. For example, a large percentage of foreign born not citizens have jobs in the arts, entertainment, and recreation, and accommodation and food services industry. One that seems to be less strict with legal documentation to work.
