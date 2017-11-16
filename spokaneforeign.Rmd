@@ -2,7 +2,9 @@
 title: "HTML Widgets"
 author: "Daniel Bies and Gonzalo Del Carpio"
 date: "November 7, 2017"
-output: html_document
+output: 
+  html_document:
+  self_contained: no
 ---
 
 ```{r setup, include=FALSE}
@@ -18,6 +20,8 @@ suppressPackageStartupMessages(library(readxl))
 suppressPackageStartupMessages(library(googleVis))
 suppressPackageStartupMessages(library(plotly))
 suppressPackageStartupMessages(library(parcoords))
+
+#options(gvis.plot.tag='chart')
 ```
 ## Demographics 
 #### This graph shows the age distribution of Spokane as a factor of origin of birth. From the data, it can be gathered that the foreign born population is older than the native population. This makes sense, because it takes a while for some foreign born people to immigrate into the USA. 
@@ -145,19 +149,17 @@ p2
 #### This graph shows the total population size of each type of person studied in this data. As expected, the native born population heavily outweighs the foreign born population. 
 
 ```{r results= 'asis'}
-library(readxl)
 spokanepopulation <- read_excel("~/Desktop/Data Visualization/Spokanefb/spokanepopulation.xlsx")
 Popcolumn=gvisColumnChart(spokanepopulation)
-plot(Popcolumn)
+print(Popcolumn,"chart")
 ```
 
 #### This graph shows the median age for each type of person studied in this dataset. The oldest population is the foreign born naturalized citizens. This can be explained by the amount of time that it takes to get citizenship after immigrating to the US, so those that are naturalized citizens must have been in the United States for many years, thus making them older. 
 
 ```{r results= 'asis'}
-library(readxl)
 spokanemedianage <- read_excel("~/Desktop/Data Visualization/Spokanefb/spokanemedianage.xlsx")
 Agecolumn=gvisColumnChart(spokanemedianage)
-plot(Agecolumn)
+print(Agecolumn,"chart")
 ```
 
 ##Gender
